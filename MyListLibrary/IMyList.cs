@@ -1,15 +1,15 @@
-﻿
+﻿using System.Collections.Generic;
 
 namespace MyListLibrary
 {
-    interface IMyList<T>
+    interface IMyList<T> : IEnumerable<T>
     {
         void AddFirst(T value);
         void AddLast(T value);
         void AddByIndex(int index, T value);
-        void AddElementsFirst(MyList<T> list);
-        void AddElementsLast(MyList<T> list);
-        void AddElementsByIndex(int index, MyList<T> list);
+        void AddElementsFirst(IEnumerable<T> list);
+        void AddElementsLast(IEnumerable<T> list);
+        void AddElementsByIndex(int index, IEnumerable<T> list);
         void RemoveFirstElement();
         void RemoveLastElement();
         void RemoveElementByIndex(int index);
@@ -27,8 +27,5 @@ namespace MyListLibrary
         void Reverse();
         void SortDesc();
         void SortAsc();
-
-
-
     }
 }

@@ -27,17 +27,7 @@ namespace MyList
 
             Console.WriteLine($"Capacity: {myList.Capacity}\t" + $"Count: {myList.Count}\t");
 
-            //  myList.AddElementsFirst(new MyList<int>(new int[]{45,46, 47,48}));
-
-            //List<int> r = new List<int>();
-            //r.Add(4);
-            //r.Add(7);
-            //r.Add(48);
-            //r.Add(49);
-
-            //r.Remove(7);
-
-            //myList.SortDesc();
+            myList.AddElementsLast(new MyList<int>(new int[3] { 31, 32, 33 }));
 
             for (int i = 0; i < myList.Count; i++)
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MyListLibrary
 {
-    public class MyList<T> : IMyList<T> where T : IComparable<T>
+    public class MyList<T> : IEnumerable<T>, IMyList<T> where T : IComparable<T>
     {
         private const int DEFAULT_SIZE = 4;
         private const double INCREAMENTOR = 1.33;
@@ -33,7 +33,14 @@ namespace MyListLibrary
 
         public T this[int index]
         {
-            get { return array[index]; }
+            get
+            {
+                if (index >= Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                return array[index];
+            }
         }
 
         public void AddFirst(T value)
@@ -68,39 +75,41 @@ namespace MyListLibrary
             ++Count;
         }
 
-        public void AddElementsFirst(MyList<T> list)
+        public void AddElementsFirst(IEnumerable<T> list)
         {
             AddElementsByIndex(0, list);
         }
 
-        public void AddElementsLast(MyList<T> list)
+        public void AddElementsLast(IEnumerable<T> list)
         {
             AddElementsByIndex(Count, list);
         }
 
-        public void AddElementsByIndex(int index, MyList<T> list)
+        public void AddElementsByIndex(int index, IEnumerable<T> list)
         {
             if (index < 0 || index > array.Length)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            if (IsFull(list.Count))
+            MyList<T> arr = (MyList<T>)list;
+
+            if (IsFull(arr.Count))
             {
-                Resize(list.Count);
+                Resize(arr.Count);
             }
 
             for (int i = Count - 1; i >= index; i--)
             {
-                array[i + list.Count] = array[i];
+                array[i + arr.Count] = array[i];
             }
 
-            for (int i = index, j = 0; i < index + list.Count; i++, j++)
+            for (int i = index, j = 0; i < index + arr.Count; i++, j++)
             {
-                array[i] = list[j];
+                array[i] = arr[j];
             }
 
-            Count += list.Count;
+            Count += arr.Count;
         }
 
         public void RemoveFirstElement()
@@ -140,6 +149,7 @@ namespace MyListLibrary
                     index = i;
                 }
             }
+            --Count;
 
             return index;
         }
@@ -157,6 +167,7 @@ namespace MyListLibrary
                     --i;
                 }
             }
+            Count -= qty;
 
             return qty;
         }
@@ -168,62 +179,27 @@ namespace MyListLibrary
                 throw new ArgumentException();
             }
 
-            if (indexFirstElement < 0 || indexFirstElement >= array.Length || indexFirstElement + numberElements > array.Length)
+            if (indexFirstElement < 0 || indexFirstElement + numberElements - 1 > Count)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            T[] newArr = new T[array.Length - numberElements];
-
-            for (int i = 0; i < indexFirstElement; i++)
+            for (int i = indexFirstElement + numberElements; i < Count; i++)
             {
-                newArr[i] = array[i];
+                array[i - numberElements] = array[i];
             }
 
-            for (int i = indexFirstElement; i < newArr.Length; i++)
-            {
-                newArr[i] = array[i + numberElements];
-            }
+            Count -= numberElements;
         }
 
         public void RemoveFirstElements(int numberElements)
         {
-            if (numberElements < 0)
-            {
-                throw new ArgumentException();
-            }
-
-            if (numberElements > array.Length)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            T[] newArr = new T[array.Length - numberElements];
-
-            for (int i = 0; i < newArr.Length; i++)
-            {
-                newArr[i] = array[i + numberElements];
-            }
+            RemoveAt(0, numberElements);
         }
 
         public void RemoveLastElements(int numberElements)
         {
-            if (numberElements < 0)
-            {
-                throw new ArgumentException();
-            }
-
-            if (numberElements > array.Length)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            T[] newArr = new T[array.Length - numberElements];
-
-            for (int i = 0; i < array.Length - numberElements; i++)
-            {
-                newArr[i] = array[i];
-            }
+            RemoveAt(Count - numberElements, numberElements);
         }
 
         public T GetMinElement()
@@ -349,6 +325,19 @@ namespace MyListLibrary
             T temp = number1;
             number1 = number2;
             number2 = temp;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                yield return array[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
