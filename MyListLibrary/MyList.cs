@@ -55,7 +55,7 @@ namespace MyListLibrary
 
         public void AddByIndex(int index, T value)
         {
-            if (index < 0 || index > array.Length)
+            if (index < 0 || index > Count)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -87,7 +87,7 @@ namespace MyListLibrary
 
         public void AddElementsByIndex(int index, IEnumerable<T> list)
         {
-            if (index < 0 || index > array.Length)
+            if (index < 0 || index > Count)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -246,7 +246,7 @@ namespace MyListLibrary
         {
             int index = -1;
 
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (array[i].CompareTo(value) == 0)
                 {
@@ -271,7 +271,7 @@ namespace MyListLibrary
         {
             for (int i = 0; i < Count / 2; i++)
             {
-                Swap(ref array[i], ref array[array.Length - 1 - i]);
+                Swap(ref array[i], ref array[Count - 1 - i]);
             }
         }
 
