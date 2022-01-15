@@ -305,7 +305,7 @@ namespace MyListLibrary
 
         private bool IsFull(int extraLength = 0)
         {
-            return Capacity <= Count + extraLength ? true : false;
+            return Capacity <= Count + extraLength;
         }
 
         private void Resize(int? extraLength = null)
