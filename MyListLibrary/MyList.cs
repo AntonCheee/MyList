@@ -10,25 +10,28 @@ namespace MyListLibrary
         private const double INCREAMENTOR = 1.33;
 
         private T[] array;
-        public int Count { get; set; }
+        public int Count { get; private set; }
         public int Capacity { get => array.Length; }
 
-        public MyList()
+        public MyList() : this(DEFAULT_SIZE)
         {
-            this.array = new T[DEFAULT_SIZE];
         }
 
-        public MyList(T value)
+        public MyList(int value)
         {
-            this.array = new T[DEFAULT_SIZE];
-            array[0] = value;
-            ++Count;
+            this.array = new T[value];
         }
 
         public MyList(T[] array)
         {
-            this.array = array;
+            if (array == null)
+            {
+                throw new ArgumentException();
+            }
+
             Count += array.Length;
+            this.array = new T[Count];
+            array.CopyTo(this.array, 0);
         }
 
         public T this[int index]
@@ -39,7 +42,22 @@ namespace MyListLibrary
                 {
                     throw new IndexOutOfRangeException();
                 }
+
                 return array[index];
+            }
+            set
+            {
+                if (index > Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+
+                array[index] = value;
+
+                if(index == Count)
+                {
+                    ++Count;
+                }
             }
         }
 
@@ -75,24 +93,22 @@ namespace MyListLibrary
             ++Count;
         }
 
-        public void AddElementsFirst(IEnumerable<T> list)
+        public void AddElementsFirst(IMyList<T> list)
         {
             AddElementsByIndex(0, list);
         }
 
-        public void AddElementsLast(IEnumerable<T> list)
+        public void AddElementsLast(IMyList<T> list)
         {
             AddElementsByIndex(Count, list);
         }
 
-        public void AddElementsByIndex(int index, IEnumerable<T> list)
+        public void AddElementsByIndex(int index, IMyList<T> arr)
         {
             if (index < 0 || index > Count)
             {
                 throw new IndexOutOfRangeException();
             }
-
-            MyList<T> arr = (MyList<T>)list;
 
             if (IsFull(arr.Count))
             {
@@ -149,6 +165,7 @@ namespace MyListLibrary
                     index = i;
                 }
             }
+
             --Count;
 
             return index;
@@ -156,20 +173,21 @@ namespace MyListLibrary
 
         public int RemoveAllElementsByValue(T value)
         {
-            int qty = 0;
+            int number = 0;
 
             for (int i = 0; i < Count; i++)
             {
                 if (array[i].Equals(value))
                 {
                     RemoveElementByIndex(i);
-                    ++qty;
+                    ++number;
                     --i;
                 }
             }
-            Count -= qty;
 
-            return qty;
+            Count -= number;
+
+            return number;
         }
 
         public void RemoveAt(int indexFirstElement, int numberElements)
@@ -275,27 +293,13 @@ namespace MyListLibrary
             }
         }
 
-        public void SortDesc()
+        public void Sort(bool ascending = false)
         {
             for (int j = 1; j < Count; j++)
             {
                 for (int i = j - 1; i >= 0; i--)
                 {
-                    if (array[j].CompareTo(array[i]) == 1)
-                    {
-                        Swap(ref array[j--], ref array[i]);
-                    }
-                }
-            }
-        }
-
-        public void SortAsc()
-        {
-            for (int j = 1; j < Count; j++)
-            {
-                for (int i = j - 1; i >= 0; i--)
-                {
-                    if (array[j].CompareTo(array[i]) == -1)
+                    if (ascending ? array[j].CompareTo(array[i]) == -1 : array[j].CompareTo(array[i]) == 1)
                     {
                         Swap(ref array[j--], ref array[i]);
                     }

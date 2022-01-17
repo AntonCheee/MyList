@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MyListLibrary
 {
-    interface IMyList<T> : IEnumerable<T>
+    public interface IMyList<T> : IEnumerable<T> where T : IComparable<T>
     {
+        int Count { get; }
+        T this[int index] { get; set; }
         void AddFirst(T value);
         void AddLast(T value);
         void AddByIndex(int index, T value);
-        void AddElementsFirst(IEnumerable<T> list);
-        void AddElementsLast(IEnumerable<T> list);
-        void AddElementsByIndex(int index, IEnumerable<T> list);
+        void AddElementsFirst(IMyList<T> list);
+        void AddElementsLast(IMyList<T> list);
+        void AddElementsByIndex(int index, IMyList<T> arr);
         void RemoveFirstElement();
         void RemoveLastElement();
         void RemoveElementByIndex(int index);
@@ -25,7 +28,6 @@ namespace MyListLibrary
         int GetIndexFirstElementByValue(T value);
         void EditElementByIndex(int index, T value);
         void Reverse();
-        void SortDesc();
-        void SortAsc();
+        void Sort(bool ascending);
     }
 }
