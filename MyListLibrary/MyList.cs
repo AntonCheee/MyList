@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace MyListLibrary
 {
-    public class MyList<T> : IEnumerable<T>, IMyList<T> where T : IComparable<T>
+    public class MyList<T> where T : IComparable<T>
     {
         private const int DEFAULT_SIZE = 4;
         private const double INCREAMENTOR = 1.33;
@@ -329,19 +327,6 @@ namespace MyListLibrary
             T temp = number1;
             number1 = number2;
             number2 = temp;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                yield return array[i];
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

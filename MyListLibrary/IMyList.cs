@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace MyListLibrary
 {
-    public interface IMyList<T> : IEnumerable<T> where T : IComparable<T>
+    public interface IMyList<T> where T : IComparable<T>
     {
         int Count { get; }
         T this[int index] { get; set; }
