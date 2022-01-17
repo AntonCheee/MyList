@@ -2,7 +2,7 @@
 
 namespace MyListLibrary
 {
-    public class MyList<T> where T : IComparable<T>
+    public class MyList<T> : IMyList<T> where T : IComparable<T>
     {
         private const int DEFAULT_SIZE = 4;
         private const double INCREAMENTOR = 1.33;
