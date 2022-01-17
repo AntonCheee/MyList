@@ -26,23 +26,6 @@ namespace UnitTests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestCase(new int[] { })]
-        [TestCase(null)]
-        public static void GetMinElement_WhenArrayIsEmpty_ShouldThrowException(MyList<int> array)
-        {
-            try
-            {
-                array.GetMinElement();
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.AreEqual("Array is empty", ex.Message);
-                Assert.Pass();
-            }
-
-            Assert.Fail("No throw exception");
-        }
-
         static object[] GetMaxElementSource = new[]
         {
             new object[] { new MyList<int>(new int[] { -9, 5, -4, 73, 19, 0, -1, 100 }), 100 },
@@ -56,23 +39,6 @@ namespace UnitTests
             int actualResult = array.GetMaxElement();
 
             Assert.AreEqual(expectedResult, actualResult);
-        }
-
-        [TestCase(new int[] { })]
-        [TestCase(null)]
-        public static void GetMaxElement_WhenArrayIsEmpty_ShouldThrowException(MyList<int> array)
-        {
-            try
-            {
-                array.GetMaxElement();
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.AreEqual("Array is empty", ex.Message);
-                Assert.Pass();
-            }
-
-            Assert.Fail("No throw exception");
         }
 
         static object[] GetIndexMinElementSource = new[]
@@ -90,23 +56,6 @@ namespace UnitTests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestCase(new int[] { })]
-        [TestCase(null)]
-        public static void GetIndexMinElement_WhenArrayIsEmpty_ShouldThrowException(MyList<int> array)
-        {
-            try
-            {
-                array.GetIndexMinElement();
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.AreEqual("Array is empty", ex.Message);
-                Assert.Pass();
-            }
-
-            Assert.Fail("No throw exception");
-        }
-
         static object[] GetIndexMaxElementSource = new[]
         {
             new object[] { new MyList<int>(new int[] { -9, 5, -4, 73, 19, 0, -1, 100 }), 7 },
@@ -120,21 +69,6 @@ namespace UnitTests
             int actualResult = array.GetIndexMaxElement();
 
             Assert.AreEqual(expectedResult, actualResult);
-        }
-
-        [Test]
-        public static void GetIndexMaxElement_WhenArrayIsEmpty_ShouldThrowException()
-        {
-            try
-            {
-                new MyList<int>(new int[] { }).GetIndexMaxElement();
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.Pass();
-            }
-
-            Assert.Fail("No throw exception");
         }
     }
 }
