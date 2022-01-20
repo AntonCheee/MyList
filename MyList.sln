@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyList", "MyList\MyList.csproj", "{39FDC6C7-5DBF-40DA-A34D-E89A4F7C37BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyListLibrary", "MyListLibrary\MyListLibrary.csproj", "{16C28458-1422-4B17-9889-A5CFA82443DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListLibrary", "MyListLibrary\ListLibrary.csproj", "{16C28458-1422-4B17-9889-A5CFA82443DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{181B105F-8F73-4ED5-8922-B3C524E985DA}"
 EndProject

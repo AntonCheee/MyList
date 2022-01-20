@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MyListLibrary
+namespace ListLibrary
 {
-    public class MyList<T> : IMyList<T> where T : IComparable<T>
+    public class ArrayList<T> : IMyList<T> where T : IComparable<T>
     {
         private const int DEFAULT_SIZE = 4;
         private const double INCREAMENTOR = 1.33;
@@ -11,16 +11,16 @@ namespace MyListLibrary
         public int Count { get; private set; }
         public int Capacity { get => array.Length; }
 
-        public MyList() : this(DEFAULT_SIZE)
+        public ArrayList() : this(DEFAULT_SIZE)
         {
         }
 
-        public MyList(int value)
+        public ArrayList(int value)
         {
             this.array = new T[value];
         }
 
-        public MyList(T[] array)
+        public ArrayList(T[] array)
         {
             if (array == null)
             {
@@ -153,18 +153,8 @@ namespace MyListLibrary
 
         public int RemoveElementByValue(T value)
         {
-            int index = -1;
-
-            for (int i = 0; i < Count; i++)
-            {
-                if (array[i].Equals(value))
-                {
-                    RemoveElementByIndex(i);
-                    index = i;
-                }
-            }
-
-            --Count;
+            int index = GetIndexFirstElementByValue(value);
+            RemoveAt(index, 1);
 
             return index;
         }
@@ -198,6 +188,12 @@ namespace MyListLibrary
             if (indexFirstElement < 0 || indexFirstElement + numberElements - 1 > Count)
             {
                 throw new IndexOutOfRangeException();
+            }
+
+            if (indexFirstElement + numberElements == Count)
+            {
+                Clear();
+                return;
             }
 
             for (int i = indexFirstElement + numberElements; i < Count; i++)
@@ -305,6 +301,12 @@ namespace MyListLibrary
             }
         }
 
+        public void Clear()
+        {
+            array = null;
+            Count = 0;
+        }
+
         private bool IsFull(int extraLength = 0)
         {
             return Capacity <= Count + extraLength;
@@ -322,11 +324,11 @@ namespace MyListLibrary
             array = newArray;
         }
 
-        private static void Swap(ref T number1, ref T number2)
+        internal static void Swap(ref T value1, ref T value2)
         {
-            T temp = number1;
-            number1 = number2;
-            number2 = temp;
+            T temp = value1;
+            value1 = value2;
+            value2 = temp;
         }
     }
 }

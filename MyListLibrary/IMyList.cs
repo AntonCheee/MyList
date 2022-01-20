@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyListLibrary
+namespace ListLibrary
 {
     public interface IMyList<T> where T : IComparable<T>
     {
@@ -28,5 +28,6 @@ namespace MyListLibrary
         void EditElementByIndex(int index, T value);
         void Reverse();
         void Sort(bool ascending);
+        void Clear();
     }
 }
