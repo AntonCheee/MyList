@@ -25,7 +25,6 @@ namespace ListLibrary
         int GetIndexMaxElement();
         int GetIndexMinElement();
         int GetIndexFirstElementByValue(T value);
-        void EditElementByIndex(int index, T value);
         void Reverse();
         void Sort(bool ascending);
         void Clear();

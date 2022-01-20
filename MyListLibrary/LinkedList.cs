@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using ListLibrary.;
 
 namespace ListLibrary
 {
@@ -9,7 +8,7 @@ namespace ListLibrary
     {
         public int Count { get; set; }
         public int Capacity { get => Count; }
-        private Node<T> Root { get; set; }
+        private Node<T> root;
 
         public T this[int index]
         {
@@ -33,12 +32,12 @@ namespace ListLibrary
             }
         }
 
-        public Node<T> GetNode(int index)
+        private Node<T> GetNode(int index)
         {
-            Node<T> temp = Root;
+            Node<T> temp = root;
             for (int i = 0; i < index; i++)
             {
-                if(temp.Next == null)
+                if (temp.Next == null)
                 {
                     throw new IndexOutOfRangeException();
                 }
@@ -69,7 +68,7 @@ namespace ListLibrary
             }
             else
             {
-                Root = newNode;
+                root = newNode;
             }
 
             ++Count;
@@ -82,35 +81,35 @@ namespace ListLibrary
                 throw new IndexOutOfRangeException();
             }
 
-            LinkedList<T> insertList;
+            LinkedList<T> newList;
 
             if (!(list is LinkedList<T>))
             {
-                insertList = ToLinkedList(list);
+                newList = ToLinkedList(list);
             }
             else
             {
-                insertList = (LinkedList<T>)list;
+                newList = (LinkedList<T>)list;
             }
 
-            if (Root == null)
+            if (root == null)
             {
-                Root = insertList.Root;
+                root = newList.root;
             }
 
             Node<T> curr = GetNode(index);
 
             if (index != 0)
             {
-                GetNode(index - 1).Next = insertList.GetNode(0);
+                GetNode(index - 1).Next = newList.GetNode(0);
             }
 
             if (index != Count)
             {
-                insertList.GetNode(insertList.Count - 1).Next = curr;
+                newList.GetNode(newList.Count - 1).Next = curr;
             }
 
-            Count+= list.Count;
+            Count += list.Count;
         }
 
         public void AddElementsFirst(IMyList<T> list)
@@ -133,14 +132,9 @@ namespace ListLibrary
             AddByIndex(Count, value);
         }
 
-        public void EditElementByIndex(int index, T value)
-        {
-            GetNode(index).Value = value;
-        }
-
         public int GetIndexFirstElementByValue(T value)
         {
-            Node<T> current = Root;
+            Node<T> current = root;
             int index = -1;
 
             for (int i = 0; i < Count; i++)
@@ -158,7 +152,7 @@ namespace ListLibrary
 
         public int GetIndexMaxElement()
         {
-            Node<T> current = Root;
+            Node<T> current = root;
             int index = 0;
             T maxValue = current.Value;
 
@@ -178,7 +172,7 @@ namespace ListLibrary
 
         public int GetIndexMinElement()
         {
-            Node<T> current = Root;
+            Node<T> current = root;
             int index = 0;
             T minValue = current.Value;
 
@@ -198,7 +192,7 @@ namespace ListLibrary
 
         public T GetMaxElement()
         {
-            Node<T> current = Root;
+            Node<T> current = root;
             T maxValue = current.Value;
 
             for (int i = 0; i < Count - 1; i++)
@@ -216,7 +210,7 @@ namespace ListLibrary
 
         public T GetMinElement()
         {
-            Node<T> current = Root;
+            Node<T> current = root;
             T minValue = current.Value;
 
             for (int i = 0; i < Count - 1; i++)
@@ -234,17 +228,17 @@ namespace ListLibrary
 
         public int RemoveAllElementsByValue(T value)
         {
-            Node<T> curr = Root;
+            Node<T> curr = root;
             Node<T> prev = null;
             int count = 0;
 
             for (int i = 0; i < Count; i++)
             {
-                if(curr.Value.CompareTo(value) == 1)
+                if (curr.Value.CompareTo(value) == 1)
                 {
                     if (i == 0)
                     {
-                        Root = curr.Next;
+                        root = curr.Next;
                     }
                     else if (i == Count - 1)
                     {
@@ -285,7 +279,7 @@ namespace ListLibrary
                 }
                 else
                 {
-                    Root = GetNode(indexFirstElement + numberElements);
+                    root = GetNode(indexFirstElement + numberElements);
                 }
             }
             else
@@ -337,7 +331,7 @@ namespace ListLibrary
         public void Reverse()
         {
             Node<T> prev = null;
-            Node<T> curr = Root;
+            Node<T> curr = root;
             Node<T> currNext = null;
 
             for (int i = 0; i < Count; i++)
@@ -363,7 +357,7 @@ namespace ListLibrary
                 }
                 else
                 {
-                    Root = curr;
+                    root = curr;
                 }
             }
         }
@@ -371,7 +365,7 @@ namespace ListLibrary
         public void Sort(bool ascending = false)
         {
             IMyList<T> newList = new ArrayList<T>();
-            Node<T> temp = Root;
+            Node<T> temp = root;
 
             for (int i = 0; i < Count; i++)
             {
@@ -394,7 +388,7 @@ namespace ListLibrary
 
         public void Clear()
         {
-            Root = null;
+            root = null;
         }
 
         private static LinkedList<T> ToLinkedList(IMyList<T> arr)

@@ -15,9 +15,9 @@ namespace ListLibrary
         {
         }
 
-        public ArrayList(int value)
+        public ArrayList(int capacity)
         {
-            this.array = new T[value];
+            this.array = new T[capacity];
         }
 
         public ArrayList(T[] array)
@@ -267,16 +267,6 @@ namespace ListLibrary
             }
 
             return index;
-        }
-
-        public void EditElementByIndex(int index, T value)
-        {
-            if (index < 0 || index >= Count)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            array[index] = value;
         }
 
         public void Reverse()
