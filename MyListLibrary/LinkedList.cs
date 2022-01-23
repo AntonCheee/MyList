@@ -66,16 +66,9 @@ namespace ListLibrary
 
             LinkedList<T> newList = new LinkedList<T>();
 
-            if (!(list is LinkedList<T>))
+            foreach (var item in list)
             {
-                foreach (var item in list)
-                {
-                    newList.AddLast(item);
-                }
-            }
-            else
-            {
-                newList.root = root;
+                newList.AddLast(item);
             }
 
             AddByIndex(index, newList.root.Value);
@@ -368,7 +361,7 @@ namespace ListLibrary
         {
             Node<T> curr = root;
 
-            while(curr.Next != null)
+            while (curr.Next != null)
             {
                 yield return curr.Value;
                 curr = curr.Next;
