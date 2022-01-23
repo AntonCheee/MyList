@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ListLibrary
 {
-    public class ArrayList<T> : IMyList<T> where T : IComparable<T>
+    public class ArrayList<T> : IMyList<T>, IEnumerable<T> where T : IComparable<T>
     {
         private const int DEFAULT_SIZE = 4;
         private const double INCREAMENTOR = 1.33;
@@ -153,7 +155,7 @@ namespace ListLibrary
 
         public int RemoveElementByValue(T value)
         {
-            int index = GetIndexFirstElementByValue(value);
+            int index = IndexOf(value);
             RemoveAt(index, 1);
 
             return index;
@@ -254,7 +256,7 @@ namespace ListLibrary
             return indexMinElement;
         }
 
-        public int GetIndexFirstElementByValue(T value)
+        public int IndexOf(T value)
         {
             int index = -1;
 
@@ -314,11 +316,24 @@ namespace ListLibrary
             array = newArray;
         }
 
-        internal static void Swap(ref T value1, ref T value2)
+        private static void Swap(ref T value1, ref T value2)
         {
             T temp = value1;
             value1 = value2;
             value2 = temp;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                yield return array[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

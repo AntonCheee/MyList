@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ListLibrary
 {
-    public interface IMyList<T> where T : IComparable<T>
+    public interface IMyList<T> : IEnumerable<T> where T : IComparable<T>
     {
         int Count { get; }
         T this[int index] { get; set; }
@@ -24,7 +25,7 @@ namespace ListLibrary
         T GetMaxElement();
         int GetIndexMaxElement();
         int GetIndexMinElement();
-        int GetIndexFirstElementByValue(T value);
+        int IndexOf(T value);
         void Reverse();
         void Sort(bool ascending);
         void Clear();

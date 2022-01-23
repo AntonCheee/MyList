@@ -9,8 +9,13 @@ namespace MyList
         {
             LinkedList<int> myList = new();
 
-            myList.AddElementsByIndex(0, new ArrayList<int>(new int[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
-            myList.Sort();
+        //    myList.AddElementsByIndex(0, new ArrayList<int>( ));
+
+            myList.AddElementsByIndex(0, new ArrayList<int>(new int[] { 67,67,68}));
+
+            //    myList.Sort();
+            //var tt = myList.GetNode(10);
+
 
             for (int i = 0; i < myList.Count; i++)
             {

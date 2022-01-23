@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 namespace ListLibrary
 {
-    public class LinkedList<T> : IMyList<T> where T : IComparable<T>
+    public class LinkedList<T> : IMyList<T>, IEnumerable<T> where T : IComparable<T>
     {
         public int Count { get; set; }
         public int Capacity { get => Count; }
         private Node<T> root;
-
         public T this[int index]
         {
             get
@@ -23,29 +22,13 @@ namespace ListLibrary
             }
             set
             {
-                if (index < 0 || index > Count)
+                if (index < 0 || index >= Count)
                 {
                     throw new IndexOutOfRangeException();
                 }
 
                 GetNode(index).Value = value;
             }
-        }
-
-        private Node<T> GetNode(int index)
-        {
-            Node<T> temp = root;
-            for (int i = 0; i < index; i++)
-            {
-                if (temp.Next == null)
-                {
-                    throw new IndexOutOfRangeException();
-                }
-
-                temp = temp.Next;
-            }
-
-            return temp;
         }
 
         public void AddByIndex(int index, T value)
@@ -81,35 +64,28 @@ namespace ListLibrary
                 throw new IndexOutOfRangeException();
             }
 
-            LinkedList<T> newList;
+            LinkedList<T> newList = new LinkedList<T>();
 
             if (!(list is LinkedList<T>))
             {
-                newList = ToLinkedList(list);
+                foreach (var item in list)
+                {
+                    newList.AddLast(item);
+                }
             }
             else
             {
-                newList = (LinkedList<T>)list;
+                newList.root = root;
             }
 
-            if (root == null)
-            {
-                root = newList.root;
-            }
+            AddByIndex(index, newList.root.Value);
 
-            Node<T> curr = GetNode(index);
+            Node<T> node = GetNode(index);
 
-            if (index != 0)
-            {
-                GetNode(index - 1).Next = newList.GetNode(0);
-            }
+            newList.GetNode(newList.Count - 1).Next = GetNode(index + 1);
+            node.Next = newList.root.Next;
 
-            if (index != Count)
-            {
-                newList.GetNode(newList.Count - 1).Next = curr;
-            }
-
-            Count += list.Count;
+            Count += list.Count - 1;
         }
 
         public void AddElementsFirst(IMyList<T> list)
@@ -132,7 +108,7 @@ namespace ListLibrary
             AddByIndex(Count, value);
         }
 
-        public int GetIndexFirstElementByValue(T value)
+        public int IndexOf(T value)
         {
             Node<T> current = root;
             int index = -1;
@@ -152,47 +128,18 @@ namespace ListLibrary
 
         public int GetIndexMaxElement()
         {
-            Node<T> current = root;
-            int index = 0;
-            T maxValue = current.Value;
-
-            for (int i = 0; i < Count - 1; i++)
-            {
-                if (maxValue.CompareTo(current.Next.Value) == -1)
-                {
-                    maxValue = current.Next.Value;
-                    index = i + 1;
-                }
-
-                current = current.Next;
-            }
-
-            return index;
-        }
-
-        public int GetIndexMinElement()
-        {
-            Node<T> current = root;
-            int index = 0;
-            T minValue = current.Value;
-
-            for (int i = 0; i < Count - 1; i++)
-            {
-                if (minValue.CompareTo(current.Next.Value) == 1)
-                {
-                    minValue = current.Next.Value;
-                    index = i + 1;
-                }
-
-                current = current.Next;
-            }
-
-            return index;
+            return GetMaxElementAndIndex().index;
         }
 
         public T GetMaxElement()
         {
+            return GetMaxElementAndIndex().element;
+        }
+
+        private (T element, int index) GetMaxElementAndIndex()
+        {
             Node<T> current = root;
+            int index = 0;
             T maxValue = current.Value;
 
             for (int i = 0; i < Count - 1; i++)
@@ -200,17 +147,30 @@ namespace ListLibrary
                 if (maxValue.CompareTo(current.Next.Value) == -1)
                 {
                     maxValue = current.Next.Value;
+                    index = i + 1;
                 }
 
                 current = current.Next;
             }
 
-            return maxValue;
+            return (maxValue, index);
+
+        }
+
+        public int GetIndexMinElement()
+        {
+            return GetMinElementAndIndex().index;
         }
 
         public T GetMinElement()
         {
+            return GetMinElementAndIndex().element;
+        }
+
+        private (T element, int index) GetMinElementAndIndex()
+        {
             Node<T> current = root;
+            int index = 0;
             T minValue = current.Value;
 
             for (int i = 0; i < Count - 1; i++)
@@ -218,12 +178,13 @@ namespace ListLibrary
                 if (minValue.CompareTo(current.Next.Value) == 1)
                 {
                     minValue = current.Next.Value;
+                    index = i + 1;
                 }
 
                 current = current.Next;
             }
 
-            return minValue;
+            return (minValue, index);
         }
 
         public int RemoveAllElementsByValue(T value)
@@ -234,27 +195,28 @@ namespace ListLibrary
 
             for (int i = 0; i < Count; i++)
             {
-                if (curr.Value.CompareTo(value) == 1)
+                if (curr.Value.CompareTo(value) == 0)
                 {
-                    if (i == 0)
+                    if (curr == root)
                     {
                         root = curr.Next;
-                    }
-                    else if (i == Count - 1)
-                    {
-                        curr.Next = null;
+                        curr = root;
                     }
                     else
                     {
                         prev.Next = curr.Next;
+                        curr = curr.Next;
                     }
 
-                    prev = curr;
-                    curr = curr.Next;
                     ++count;
-                    --Count;
+                    continue;
                 }
+
+                prev = curr;
+                curr = curr.Next;
             }
+
+            Count -= count;
 
             return count;
         }
@@ -266,32 +228,18 @@ namespace ListLibrary
                 throw new ArgumentException();
             }
 
-            if (indexFirstElement < 0 || indexFirstElement + numberElements - 1 > Count)
+            if (indexFirstElement < 0 || indexFirstElement + numberElements > Count)
             {
                 throw new IndexOutOfRangeException();
             }
 
             if (indexFirstElement == 0)
             {
-                if (indexFirstElement + numberElements == Count)
-                {
-                    Clear();
-                }
-                else
-                {
-                    root = GetNode(indexFirstElement + numberElements);
-                }
+                RemoveFromHead(numberElements);
             }
             else
             {
-                if (indexFirstElement + numberElements == Count)
-                {
-                    GetNode(indexFirstElement + numberElements - 1).Next = null;
-                }
-                else
-                {
-                    GetNode(indexFirstElement - 1).Next = GetNode(indexFirstElement + numberElements);
-                }
+                RemoveFromBody(indexFirstElement, numberElements);
             }
         }
 
@@ -302,7 +250,7 @@ namespace ListLibrary
 
         public int RemoveElementByValue(T value)
         {
-            int index = GetIndexFirstElementByValue(value);
+            int index = IndexOf(value);
             RemoveAt(index, 1);
 
             return index;
@@ -310,12 +258,12 @@ namespace ListLibrary
 
         public void RemoveFirstElement()
         {
-            RemoveAt(0, 1);
+            RemoveFromHead(1);
         }
 
         public void RemoveFirstElements(int numberElements)
         {
-            RemoveAt(0, numberElements);
+            RemoveFromHead(numberElements);
         }
 
         public void RemoveLastElement()
@@ -330,77 +278,106 @@ namespace ListLibrary
 
         public void Reverse()
         {
-            Node<T> prev = null;
+            LinkedList<T> list = new LinkedList<T>();
             Node<T> curr = root;
-            Node<T> currNext = null;
 
-            for (int i = 0; i < Count; i++)
+            while (curr.Next != null)
             {
-                if (i != Count - 1)
-                {
-                    currNext = curr.Next;
-                }
-
-                if (i == 0)
-                {
-                    curr.Next = null;
-                }
-                else
-                {
-                    curr.Next = prev;
-                }
-
-                if (i != Count - 1)
-                {
-                    prev = curr;
-                    curr = currNext;
-                }
-                else
-                {
-                    root = curr;
-                }
+                list.AddFirst(curr.Value);
+                root = root.Next;
             }
+
+            root = list.root;
         }
 
         public void Sort(bool ascending = false)
         {
-            IMyList<T> newList = new ArrayList<T>();
-            Node<T> temp = root;
+            Node<T> left = GetNode(0);
 
-            for (int i = 0; i < Count; i++)
+            for (int i = 0; i < Count - 1; i++)
             {
-                newList.AddByIndex(i, temp.Value);
-                temp = temp.Next;
-            }
+                Node<T> right = GetNode(i + 1);
 
-            for (int j = 1; j < newList.Count; j++)
-            {
-                for (int i = j - 1; i >= 0; i--)
+                for (int j = i + 1; j < Count; j++)
                 {
-                    if (ascending ? newList[j].CompareTo(newList[i]) == -1 : newList[j].CompareTo(newList[i]) == 1)
+                    if (ascending ? right.Value.CompareTo(left.Value) == -1 : right.Value.CompareTo(left.Value) == 1)
                     {
-                        //TODO
-                        //ListLibrary.ArrayList<T>.Swap(ref newList[j--], ref newList[i]);
+                        Swap(ref left, ref right);
                     }
+
+                    right = right.Next;
                 }
+
+                left = left.Next;
             }
         }
 
         public void Clear()
         {
             root = null;
+            Count = 0;
         }
 
-        private static LinkedList<T> ToLinkedList(IMyList<T> arr)
+        private Node<T> GetNode(int index)
         {
-            LinkedList<T> linkedList = new LinkedList<T>();
+            Node<T> temp = root;
 
-            for (int i = 0; i < arr.Count; i++)
+            for (int i = 0; i < index; i++)
             {
-                linkedList.AddLast(arr[i]);
+                temp = temp.Next;
             }
 
-            return linkedList;
+            return temp;
+        }
+
+        private void RemoveFromHead(int numberElements)
+        {
+            if (numberElements == Count)
+            {
+                Clear();
+            }
+            else
+            {
+                root = GetNode(numberElements);
+                Count -= numberElements;
+            }
+        }
+
+        private void RemoveFromBody(int indexFirstElement, int numberElements)
+        {
+            if (indexFirstElement + numberElements == Count)
+            {
+                GetNode(indexFirstElement + numberElements - 1).Next = null;
+            }
+            else
+            {
+                GetNode(indexFirstElement - 1).Next = GetNode(indexFirstElement + numberElements);
+            }
+
+            Count -= numberElements;
+        }
+
+        private void Swap(ref Node<T> element1, ref Node<T> element2)
+        {
+            T temp = element1.Value;
+            element1.Value = element2.Value;
+            element2.Value = temp;
+        }
+
+        private IEnumerator<T> GetEnumerator()
+        {
+            Node<T> curr = root;
+
+            while(curr.Next != null)
+            {
+                yield return curr.Value;
+                curr = curr.Next;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
